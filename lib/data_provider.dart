@@ -1,29 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:to_do_app/models/task.dart';
+import 'package:to_do_app/db_helper.dart';
 
 class DataProvider extends ChangeNotifier {
-  List<Task> tasks = [
-    Task(taskName: 'Task number 1'),
-    Task(taskName: 'Task number 2'),
-  ];
 
-  void isDoneToggle(Task task) {
-    task.toggleDone();
-    notifyListeners();
-  }
-
-  void addTask(String newTask) {
-    tasks.add(Task(taskName: newTask));
-    notifyListeners();
-  }
-
-  void deleteTask(Task toDelete) {
-    tasks.remove(toDelete);
-    notifyListeners();
-  }
+  final db = DBHelper.instance;
 
   void deleteAll() {
-    tasks = [];
+    db.deleteAll();
     notifyListeners();
   }
+
+  void insertTask(String taskName, int isDone) {
+    db.insertTask(Task(
+      taskName: taskName,
+      isDone: isDone,
+    ));
+    notifyListeners();
+  }
+
+  void deleteTask(String taskName) {
+    db.deleteTask(taskName);
+    notifyListeners();
+  }
+
+  void toggleDone(Task task) {
+    if (task.isDone == 0) {
+      task.isDone = 1;
+    } else {
+      task.isDone = 0;
+    }
+    db.updateTask(task);
+    notifyListeners();
+  }
+
 }

@@ -4,6 +4,9 @@ import 'package:to_do_app/data_provider.dart';
 import 'package:provider/provider.dart';
 
 class FloatingActionButtons extends StatelessWidget {
+  FloatingActionButtons({@required this.updateList});
+  final Function updateList;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DataProvider>(
@@ -17,6 +20,7 @@ class FloatingActionButtons extends StatelessWidget {
                 backgroundColor: Color(0xFF25202B),
                 onPressed: () {
                   data.deleteAll();
+                  updateList();
                 },
                 child: Icon(Icons.clear, size: 30.0, color: Colors.white),
               ),
@@ -24,9 +28,12 @@ class FloatingActionButtons extends StatelessWidget {
                 backgroundColor: Color(0xFF25202B),
                 onPressed: () {
                   showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => AddTaskScreen());
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => AddTaskScreen(
+                      updateList: updateList,
+                    ),
+                  );
                 },
                 child: Icon(Icons.add, size: 30.0, color: Colors.white),
               ),
